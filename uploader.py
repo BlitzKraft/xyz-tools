@@ -1,20 +1,50 @@
 #!/usr/bin/python
 from struct import *
-import sys
+import sys, getopt
 import os
 import serial;
 import io;
 import time;
 
 offsetFile = 0;
+#DEVICE = "/dev/stdout"
 
+global DEVICE
+global gcodeFile
 
 # Hardcode parameters for now
 # Parameters set for XYZ from watching the traffic
-DEVICE='/dev/ttyACM0'
+
+def main(argv):
+	try:
+		opts, args = getopt.getopt(argv, "hp:f:")
+	except getopt.GetoptError:
+		usage()
+		sys.exit(2)
+	for opt, arg in opts:
+		if opt in ("-h", "--help"):
+			usage()
+			sys.exit()
+		elif opt == 'p':
+			if arg in ("u1", "U1","ultron1", "Ultron1"):
+				DEVICE = "/dev/ttyACM0"
+			elif arg in ("u2", "U2","ultron2", "Ultron2"):
+				DEVICE = "/dev/ttyACM1"
+			elif arg in ("u3", "U3","ultron3", "Ultron3"):
+				DEVICE = "/dev/ttyACM2"
+			elif arg == "test":
+				DEVICE = "/dev/stdout"
+		elif opt == 'f':
+			gcodeFile = arg
+
+
+
+
+
+#DEVICE=outdev
 TIMEOUT = 0.1	# We want to block the program until we get a response back
 BAUDRATE = 115200
-gcodeFile = "testfiles/ruler.gcode"
+#gcodeFile = infile
 DEBUGMODE = 1
 SERIALENABLE = 1
 
