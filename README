@@ -1,3 +1,10 @@
+From BlitzKraft:
+---------------
+Tested the script successfully on a Raspberry Pi. Now took it upon myself to make it easier to use.
+
+
+From tbirdsaw:
+--------------
 A collection of scripts to communicate with an XYZPrinter DaVinci under Linux
 
 See notes.txt for a braindump.
