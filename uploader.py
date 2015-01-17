@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from struct import *
-import sys, getopt
+import sys, argparse
 import os
 import serial;
 import io;
@@ -8,14 +8,24 @@ import time;
 
 offsetFile = 0;
 
-global argy
-argy = sys.argv[0:]
+parser = argparse.ArgumentParser(prog='uploader', usage="uploader -p <printer selection> -f <filename> ")
+parser.add_argument('-f', '--file', help="name of file")
+parser.add_argument('-p', '--printer', help = "select printer, options are u1, u2, u3 (u can be omitted)")
 
-#Hardcode parameters for now
+args = parser.parse_args()
+print args
 
-#Parameters set for XYZ from watching the traffic
+gcodeFile = args.file
 
-DEVICE="/dev/ttyACM0"
+if args.printer == "u1" or args.printer == "Ultron1" or args.printer == "1":
+	DEVICE = "/dev/ttyACM0"
+elif args.printer == "u2" or args.printer == "Ultron2" or args.printer == "2":
+	DEVICE = "/dev/ttyACM1"
+elif args.printer == "u3" or args.printer == "Ultron3" or args.printer == "3":
+	DEVICE = "/dev/ttyACM2"
+elif args.printer == "test":
+	DEVICE = "/dev/stdout"
+
 TIMEOUT = 0.1	# We want to block the program until we get a response back
 BAUDRATE = 115200
 DEBUGMODE = 1
@@ -32,36 +42,7 @@ SEND_FIRMWARE = MACHINE_INFO + '3'
 SEND_FILE = MACHINE_INFO + '4'
 
 #ReturnedStrings:
-#SEND_FILE_RESP1 = "OFFLINE_OK" + "\n"
-
-
-def main(argu):
-	try:
-		opts, args = getopt.getopt(argu, "hp:f:")
-	except getopt.GetoptError:
-		usage()
-		sys.exit(2)
-	DEVICE = ""
-	infile = "test.txt"
-	for opt, arg in opts:
-		if opt in ("-h", "--help"):
-			usage()
-			sys.exit()
-		elif opt == 'p':
-			if arg in ("u1", "U1","ultron1", "Ultron1"):
-				DEVICE = "/dev/ttyACM0"
-			elif arg in ("u2", "U2","ultron2", "Ultron2"):
-				DEVICE = "/dev/ttyACM1"
-			elif arg in ("u3", "U3","ultron3", "Ultron3"):
-				DEVICE = "/dev/ttyACM2"
-			elif arg == 'test':
-				DEVICE = "/dev/stdout"
-		elif opt == 'f':
-			infile = arg
-	return infile, DEVICE
-
-gcodeFile, DEVICE = main(argy)
-#print gcodeFile
+SEND_FILE_RESP1 = "OFFLINE_OK" + "\n"
 
 #Open our file
 gcode = os.fdopen(os.open(gcodeFile,os.O_RDONLY))
