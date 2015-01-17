@@ -17,11 +17,11 @@ print args
 
 gcodeFile = args.file
 
-if args.printer == "u1" or args.printer == "Ultron1" or args.printer == "1":
+if args.printer == "u1" or args.printer == "1":
 	DEVICE = "/dev/ttyACM0"
-elif args.printer == "u2" or args.printer == "Ultron2" or args.printer == "2":
+elif args.printer == "u2" or args.printer == "2":
 	DEVICE = "/dev/ttyACM1"
-elif args.printer == "u3" or args.printer == "Ultron3" or args.printer == "3":
+elif args.printer == "u3" or args.printer == "3":
 	DEVICE = "/dev/ttyACM2"
 elif args.printer == "test":
 	DEVICE = "/dev/stdout"
