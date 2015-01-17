@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from struct import *
-import sys
+import sys, getopt
 import os
 import serial;
 import io;
@@ -8,13 +8,16 @@ import time;
 
 offsetFile = 0;
 
+global argy
+argy = sys.argv[0:]
 
-# Hardcode parameters for now
-# Parameters set for XYZ from watching the traffic
-DEVICE='/dev/ttyACM0'
+#Hardcode parameters for now
+
+#Parameters set for XYZ from watching the traffic
+
+DEVICE="/dev/ttyACM0"
 TIMEOUT = 0.1	# We want to block the program until we get a response back
 BAUDRATE = 115200
-gcodeFile = "testfiles/ruler.gcode"
 DEBUGMODE = 1
 SERIALENABLE = 1
 
@@ -30,6 +33,35 @@ SEND_FILE = MACHINE_INFO + '4'
 
 #ReturnedStrings:
 #SEND_FILE_RESP1 = "OFFLINE_OK" + "\n"
+
+
+def main(argu):
+	try:
+		opts, args = getopt.getopt(argu, "hp:f:")
+	except getopt.GetoptError:
+		usage()
+		sys.exit(2)
+	DEVICE = ""
+	infile = "test.txt"
+	for opt, arg in opts:
+		if opt in ("-h", "--help"):
+			usage()
+			sys.exit()
+		elif opt == 'p':
+			if arg in ("u1", "U1","ultron1", "Ultron1"):
+				DEVICE = "/dev/ttyACM0"
+			elif arg in ("u2", "U2","ultron2", "Ultron2"):
+				DEVICE = "/dev/ttyACM1"
+			elif arg in ("u3", "U3","ultron3", "Ultron3"):
+				DEVICE = "/dev/ttyACM2"
+			elif arg == 'test':
+				DEVICE = "/dev/stdout"
+		elif opt == 'f':
+			infile = arg
+	return infile, DEVICE
+
+gcodeFile, DEVICE = main(argy)
+#print gcodeFile
 
 #Open our file
 gcode = os.fdopen(os.open(gcodeFile,os.O_RDONLY))
@@ -159,9 +191,7 @@ def readFile():
 		DEBUGMODE = 1
 
 		returnedData = readData();
-	
-	        if checkReturnedData("CheckSumOK",returnedData.strip()) == 1:
-	                
+		if checkReturnedData("CheckSumOK",returnedData.strip()) == 1:
 			errprint("Data doesn't match expected returned?!")
 			#sys.exit("Dying because of unexpected data!")
 
