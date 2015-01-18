@@ -8,15 +8,26 @@ import time;
 
 offsetFile = 0;
 
+#Create a  parser, with some help text for the options
 parser = argparse.ArgumentParser(prog='uploader', usage="uploader -p <printer selection> -f <filename> ")
+
+#Look for the file argument
 parser.add_argument('-f', '--file', help="name of file")
+
+#Look for which printer the user wants to print.
 parser.add_argument('-p', '--printer', help = "select printer, options are u1, u2, u3 (u can be omitted)")
 
-args = parser.parse_args()
-print args
+#Pass the arguments list to the variable
 
+args = parser.parse_args()
+
+#Used when debugging. Doesn't do anything for the program.
+#print args
+
+#Pass the file name to the right variable
 gcodeFile = args.file
 
+#Interpret the right device/printer from the args list. 
 if args.printer == "u1" or args.printer == "1":
 	DEVICE = "/dev/ttyACM0"
 elif args.printer == "u2" or args.printer == "2":
