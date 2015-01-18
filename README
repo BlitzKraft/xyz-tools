@@ -1,6 +1,10 @@
 From BlitzKraft:
 ---------------
 Tested the script successfully on a Raspberry Pi. Now took it upon myself to make it easier to use.
+Now successfully takes command line arguments. No default values set. Both the file name and the printer selection
+are required. 
+
+Usage: [python] uploader.py -f <file name> -p <printer selection>
 
 
 From tbirdsaw:
